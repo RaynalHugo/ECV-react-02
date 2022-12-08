@@ -25,7 +25,12 @@ function Wrapper() {
     const [status, setStatus] = useState(defaultState);
     const [player, setPlayer] = useState(CROSS);
 
+    const winner = getWinner(status)
+
     function setCellStatus(row, col, status) {
+        if(winner !== undefined) {
+            return
+        }
         setStatus((previousState) =>
             set([row, col], status, previousState)
         )
@@ -41,7 +46,8 @@ function Wrapper() {
 
     return (
         <>
-            <span>Current player : {player}</span>
+            <span>Current player : {player}</span><br/>
+            <span>Winner : {winner}</span>
             <table className="wrapper">
                 <figcaption>Tic Tac Toe</figcaption>
                 <tr>
@@ -79,6 +85,39 @@ function Cell({status, setCellStatus}) {
     return (
         <td className="cell" onClick={setCellStatus}></td>
     )
+}
+
+const getWinner = status => {
+    for (let r = 0; r < status.length; r++) {
+        if (status[r][0] === status[r][1] && status[r][0] === status[r][2] && status[r][0] !== EMPTY) {
+            return status[r][0]
+        }
+    }
+
+
+    for (let c = 0; c < status.length; c++) {
+        if (status[0][c] === status[1][c] && status[0][c] === status[2][c] && status[0][c] !== EMPTY) {
+            return status[0][c]
+        }
+    }
+
+    if (status[0][0] === status[1][1] && status[0][0] === status[2][2] && status[0][0] !== EMPTY) {
+        return status[0][0]
+    }
+
+    if (status[0][2] === status[1][1] && status[0][2] === status[2][0] && status[0][2] !== EMPTY) {
+        return status[0][2]
+    }
+
+    const isTotallyFilled = status.every(row => {
+        return row.every(column => {
+            return column !== EMPTY
+        })
+    })
+
+    if (isTotallyFilled) {
+        return 'draw'
+    }
 }
 
 export default App
