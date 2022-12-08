@@ -1,0 +1,11 @@
+.wrapper {
+    border-collapse: collapse;
+}
+
+.cell {
+    border: solid 1px black;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    font-size: 100px;
+}
