@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import { set } from 'lodash/fp'
 
 const EMPTY = "Empty";
 const CROSS = "Cross";
@@ -15,40 +16,47 @@ function App() {
 
 const defaultState =
 [
-    [CROSS, CIRCLE, EMPTY],
-    [EMPTY, CROSS, EMPTY],
-    [CIRCLE, EMPTY, CROSS]
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
 ]
 
 function Wrapper() {
-    const [state, setState] = useState(defaultState);
+    const [status, setStatus] = useState(defaultState);
+    
+    function setCellStatus(row, col, status) {
+        setStatus((previousState) => 
+            set([row, col], status, previousState)
+        )
+    }
 
     return (
         <>
+        <button onClick={() => setCellStatus(0,0, CIRCLE)}>Set Status Test</button>
             <table className="wrapper">
                 <figcaption>Tic Tac Toe</figcaption>
                 <tr>
-                    <Cell status={state[0][0]}/>
-                    <Cell status={state[0][1]}/>
-                    <Cell status={state[0][2]}/>
+                    <Cell status={status[0][0]} setCellStatus={() => setCellStatus(0, 0, CROSS)}/>
+                    <Cell status={status[0][1]} setCellStatus={() => setCellStatus(0, 1, CROSS)}/>
+                    <Cell status={status[0][2]} setCellStatus={() => setCellStatus(0, 2, CROSS)}/>
                 </tr>
                 <tr>
-                    <Cell status={state[1][0]}/>
-                    <Cell status={state[1][1]}/>
-                    <Cell status={state[1][2]}/>
+                    <Cell status={status[1][0]} setCellStatus={() => setCellStatus(1, 0, CROSS)}/>
+                    <Cell status={status[1][1]} setCellStatus={() => setCellStatus(1, 1, CROSS)}/>
+                    <Cell status={status[1][2]} setCellStatus={() => setCellStatus(1, 2, CROSS)}/>
                 </tr>
                 <tr>
-                    <Cell status={state[2][0]}/>
-                    <Cell status={state[2][1]}/>
-                    <Cell status={state[2][2]}/>
+                    <Cell status={status[2][0]} setCellStatus={() => setCellStatus(2, 0, CROSS)}/>
+                    <Cell status={status[2][1]} setCellStatus={() => setCellStatus(2, 1, CROSS)}/>
+                    <Cell status={status[2][2]} setCellStatus={() => setCellStatus(2, 2, CROSS)}/>
                 </tr>
             </table>
-            <pre>{JSON.stringify(state, null, 2)}</pre>
+            <pre>{JSON.stringify(status, null, 2)}</pre>
         </>
     )
 }
 
-function Cell({status}) {
+function Cell({status, setCellStatus}) {
     if (status === CROSS) {
         return (
             <td className="cell">✘</td>
@@ -60,7 +68,7 @@ function Cell({status}) {
         )
     }
     return (
-        <td className="cell"></td>
+        <td className="cell" onClick={setCellStatus}></td>
     )
 }
 
